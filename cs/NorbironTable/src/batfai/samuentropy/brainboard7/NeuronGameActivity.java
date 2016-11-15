@@ -39,16 +39,65 @@
  */
 package batfai.samuentropy.brainboard7;
 
+import android.os.Bundle;
+import android.preference.PreferenceManager;
+
 /**
  *
  * @author nbatfai
  */
 public class NeuronGameActivity extends android.app.Activity {
 
+    public static boolean restore = false;
+
+    @Override
+    protected void onPause()
+    {
+        super.onPause();
+
+        android.content.SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
+        android.content.SharedPreferences.Editor editor = settings.edit();
+
+        NorbironSurfaceView.saveData(editor);
+    }
+
     @Override
     public void onCreate(android.os.Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
-                
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle savedInstanceState) {
+
+        for (int i = 0; i < NorbironSurfaceView.getNumBoxes(); i++) {
+            savedInstanceState.putInt("x" + i, NorbironSurfaceView.getBox(i).getX());
+            savedInstanceState.putInt("y" + i, NorbironSurfaceView.getBox(i).getY());
+            savedInstanceState.putInt("db" + i, NorbironSurfaceView.getBox(i).numberOfNeurons);
+            savedInstanceState.putInt("type" + i, NorbironSurfaceView.getBox(i).getCoverType());
+            savedInstanceState.putBoolean("selected" + i, NorbironSurfaceView.getBox(i).getSelected());
+            savedInstanceState.putBoolean("open" + i, NorbironSurfaceView.getBox(i).getCover());
+        }
+
+        savedInstanceState.putInt("size", NorbironSurfaceView.getNumBoxes());
+
+        super.onSaveInstanceState(savedInstanceState);
+    }
+
+    @Override
+    public void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        restore = true;
+
+        super.onRestoreInstanceState(savedInstanceState);
+        for (int i = 0; i < savedInstanceState.getInt("size"); i++) {
+            int covertype = savedInstanceState.getInt("type"+i);
+            NeuronBox box = (NeuronBox)Nodes.get(covertype).clone();
+            box.setXY(savedInstanceState.getInt("x"+i), savedInstanceState.getInt("y"+i));
+            box.numberOfNeurons = savedInstanceState.getInt("db"+i);
+            box.setSelected(savedInstanceState.getBoolean("selected"+i));
+            box.setCover(savedInstanceState.getBoolean("open"+i));
+            NorbironSurfaceView.addBox(box);
+        }
     }
 }

@@ -59,6 +59,8 @@ public class NeuronBox implements Cloneable {
     protected static android.graphics.Paint selectedBoxPaint = new android.graphics.Paint();
     protected int selectedBoxPaintSize = 0;
 
+    private int coverType;
+
     protected boolean open = false;
     protected boolean selected = false;
 
@@ -66,7 +68,7 @@ public class NeuronBox implements Cloneable {
 
     public NeuronBox(android.graphics.Bitmap tiles, int length, int width, int height,
             int numberOfNeurons,
-            android.graphics.Bitmap cover, int x, int y) {
+            android.graphics.Bitmap cover, int x, int y, int coverType) {
         this.x = x;
         this.y = y;
         this.tiles = tiles;
@@ -74,6 +76,8 @@ public class NeuronBox implements Cloneable {
         this.cover = cover;
         this.boxWidth = cover.getWidth();
         this.boxHeight = cover.getHeight();
+
+        this.coverType = coverType;
 
         to = new android.graphics.Rect(0, 0, boxWidth, boxHeight);
 
@@ -148,6 +152,8 @@ public class NeuronBox implements Cloneable {
     public int getY() {
         return y;
     }
+
+    public int getCoverType() { return coverType; }
 
     public void setXY(float x, float y) {
         this.x = (int) x;
