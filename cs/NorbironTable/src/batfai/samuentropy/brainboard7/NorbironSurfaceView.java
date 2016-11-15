@@ -255,7 +255,7 @@ public class NorbironSurfaceView extends android.view.SurfaceView implements Run
                 }
             }
 
-            for (NeuronBox nb : nodeBoxes) {
+            for (NeuronBox nb : new java.util.ArrayList<NeuronBox>(nodeBoxes)) {
                 nb.draw(-startsx, -startsy, canvas);
             }
 
